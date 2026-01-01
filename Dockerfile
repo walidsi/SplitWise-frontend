@@ -1,40 +1,30 @@
-# Build stage
+# Stage 1: Build
 FROM node:20-alpine AS builder
-
 WORKDIR /app
-
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
 RUN npm ci
-
-# Copy source code
 COPY . .
 
-# Set build-time environment variables
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-# Build the application
 RUN npm run build
 
-# Production stage
+# Stage 2: Production Runner
 FROM node:20-alpine AS runner
-
 WORKDIR /app
 
-# Copy built application
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
+# 1. Install a lightweight static server
+RUN npm install -g serve
 
-# Set environment variables
-ENV NODE_ENV=production
+# 2. Copy the 'dist' folder (Vite default output)
+COPY --from=builder /app/dist ./dist
+
+# 3. Set Port
 ENV PORT=8080
-
-# Expose port
 EXPOSE 8080
 
-# Start the server
-CMD ["node", "build"]
+# 4. Start 'serve' and tell it to listen on 0.0.0.0 (required by Cloud Run)
+# -s: Single page app mode (routes all requests to index.html)
+# -l: Listen on the port provided by Cloud Run
+CMD ["sh", "-c", "serve -s dist -l $PORT"]
