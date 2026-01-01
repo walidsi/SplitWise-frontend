@@ -10,8 +10,8 @@ ENV VITE_API_URL=$VITE_API_URL
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies (use npm ci if lockfile exists, otherwise npm install)
-RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+# Install dependencies
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -22,24 +22,16 @@ RUN npm run build
 # Stage 2: Serve with nginx
 FROM nginx:alpine
 
-# Install envsubst (part of gettext)
-RUN apk add --no-cache gettext
-
-# Remove default nginx static assets
-RUN rm -rf /usr/share/nginx/html/*
+# Remove default nginx config and static assets
+RUN rm -rf /usr/share/nginx/html/* /etc/nginx/conf.d/default.conf
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy nginx configuration template
-COPY nginx.conf /etc/nginx/nginx.conf.template
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Cloud Run requires the container to listen on PORT env variable
-# Default to 8080 if not set
-ENV PORT=8080
-
-# Expose the port
+# Cloud Run uses port 8080
 EXPOSE 8080
 
-# Substitute PORT variable and start nginx
-CMD ["/bin/sh", "-c", "envsubst '${PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
+CMD ["nginx", "-g", "daemon off;"]
