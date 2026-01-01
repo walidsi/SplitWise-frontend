@@ -39,7 +39,7 @@ export default function BillPage() {
   });
 
   const updateBillMutation = useMutation({
-    mutationFn: (data: { name?: string; tip_type?: string; tip_value?: string; tax_amount?: string }) =>
+    mutationFn: (data: { name?: string; tip_type?: 'fixed' | 'percentage'; tip_value?: string; tax_amount?: string }) =>
       billsApi.update(billId!, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bill', billId] });
