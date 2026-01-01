@@ -10,8 +10,8 @@ ENV VITE_API_URL=$VITE_API_URL
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (use npm ci if lockfile exists, otherwise npm install)
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 # Copy source code
 COPY . .
