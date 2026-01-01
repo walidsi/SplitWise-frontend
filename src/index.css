@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-sand-50 text-midnight-900 antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    @apply bg-terracotta-200 text-terracotta-900;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-sand-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-sand-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-sand-400;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 
+           font-medium rounded-xl transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-offset-2 
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-terracotta-500 text-white 
+           hover:bg-terracotta-600 active:bg-terracotta-700
+           focus:ring-terracotta-400;
+  }
+
+  .btn-secondary {
+    @apply btn bg-midnight-100 text-midnight-800 
+           hover:bg-midnight-200 active:bg-midnight-300
+           focus:ring-midnight-300;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-midnight-600 
+           hover:bg-sand-200 active:bg-sand-300
+           focus:ring-sand-300;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-500 text-white 
+           hover:bg-red-600 active:bg-red-700
+           focus:ring-red-400;
+  }
+
+  .btn-success {
+    @apply btn bg-forest-500 text-white 
+           hover:bg-forest-600 active:bg-forest-700
+           focus:ring-forest-400;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-lg;
+  }
+
+  .input {
+    @apply w-full px-4 py-2.5 bg-white border border-sand-300 rounded-xl
+           text-midnight-900 placeholder:text-midnight-400
+           focus:outline-none focus:ring-2 focus:ring-terracotta-300 focus:border-terracotta-400
+           transition-all duration-200;
+  }
+
+  .input-error {
+    @apply border-red-400 focus:ring-red-300 focus:border-red-400;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-midnight-700 mb-1.5;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-sand-200
+           overflow-hidden;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-200
+           hover:shadow-md hover:border-sand-300 hover:-translate-y-0.5;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-terracotta {
+    @apply badge bg-terracotta-100 text-terracotta-700;
+  }
+
+  .badge-forest {
+    @apply badge bg-forest-100 text-forest-700;
+  }
+
+  .badge-midnight {
+    @apply badge bg-midnight-100 text-midnight-700;
+  }
+
+  .divider {
+    @apply border-t border-sand-200;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-terracotta {
+    @apply bg-gradient-to-br from-terracotta-400 via-terracotta-500 to-terracotta-600;
+  }
+
+  .gradient-forest {
+    @apply bg-gradient-to-br from-forest-400 via-forest-500 to-forest-600;
+  }
+
+  .gradient-warm {
+    @apply bg-gradient-to-br from-sand-100 via-terracotta-50 to-sand-100;
+  }
+
+  .pattern-dots {
+    background-image: radial-gradient(circle, rgba(207, 86, 53, 0.08) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .pattern-grid {
+    background-image: 
+      linear-gradient(to right, rgba(207, 86, 53, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(207, 86, 53, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
