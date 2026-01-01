@@ -9,7 +9,7 @@ interface BillSettingsModalProps {
   bill: Bill;
   onSave: (data: {
     name?: string;
-    tip_type?: string;
+    tip_type?: 'fixed' | 'percentage';
     tip_value?: string;
     tax_amount?: string;
   }) => void;
