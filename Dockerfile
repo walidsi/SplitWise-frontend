@@ -1,30 +1,38 @@
 # Stage 1: Build
 FROM node:20-alpine AS builder
 WORKDIR /app
+
+# Install dependencies
 COPY package*.json ./
 RUN npm ci
+
+# Copy source and build
 COPY . .
 
+# In SvelteKit, VITE_ variables must be available during build
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm run build
 
-# Stage 2: Production Runner
+# Stage 2: Runner
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# 1. Install a lightweight static server
-RUN npm install -g serve
+# Copy the build output from SvelteKit's specific directory
+# adapter-node puts the standalone server in 'build' by default
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
 
-# 2. Copy the 'dist' folder (Vite default output)
-COPY --from=builder /app/dist ./dist
-
-# 3. Set Port
+# Cloud Run environment variables
+ENV NODE_ENV=production
 ENV PORT=8080
+
+# SvelteKit adapter-node uses these env vars to determine port/host
+ENV HOST=0.0.0.0
+
 EXPOSE 8080
 
-# 4. Start 'serve' and tell it to listen on 0.0.0.0 (required by Cloud Run)
-# -s: Single page app mode (routes all requests to index.html)
-# -l: Listen on the port provided by Cloud Run
-CMD ["sh", "-c", "serve -s dist -l $PORT"]
+# Start the SvelteKit server
+CMD ["node", "build"]
