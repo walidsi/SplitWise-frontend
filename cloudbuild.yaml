@@ -13,3 +13,6 @@ images:
 
 substitutions:
   _VITE_API_URL: ''
+
+options:
+  logging: CLOUD_LOGGING_ONLY
