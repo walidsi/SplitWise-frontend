@@ -64,7 +64,7 @@ export default function HomePage() {
     },
   });
 
-  const bills = billsData?.results ?? [];
+  const bills = Array.isArray(billsData) ? billsData : (billsData?.results ?? []);
 
   const handleCreateBill = (e: React.FormEvent) => {
     e.preventDefault();
