@@ -1,0 +1,15 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'VITE_API_URL=${_VITE_API_URL}'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/splitwise-frontend'
+      - '.'
+
+images:
+  - 'gcr.io/$PROJECT_ID/splitwise-frontend'
+
+substitutions:
+  _VITE_API_URL: ''
